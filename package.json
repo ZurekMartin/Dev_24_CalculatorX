@@ -1,0 +1,20 @@
+{
+  "name": "Dev_24_CalculatorX",
+  "version": "1.0.0",
+  "main": "main.js",
+  "repository": "https://github.com/ZurekMartin/Dev_24_CalculatorX.git",
+  "author": "Martin Žůrek <zurek.martin.1@icloud.com>",
+  "license": "MIT",
+  "private": true,
+  "packageManager": "yarn@1.21.21",
+  "workspaces": [
+    "apps/*"
+  ],
+  "dependencies": {
+    "vue": "^3.4.31"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.5",
+    "vite": "^5.3.4"
+  }
+}
