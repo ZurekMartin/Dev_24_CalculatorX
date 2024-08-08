@@ -102,7 +102,7 @@ export default {
       }
 
       if (number === '.') {
-        const parts = displayValue.value.split(/[\+\-\*\/]/).map(part => part.trim());
+        const parts = displayValue.value.split(/[+\-*\/]/).map(part => part.trim());
         const lastPart = parts[parts.length - 1];
 
         if (lastPart.includes('.')) {
