@@ -35,6 +35,15 @@ function toggleInfo() {
     isInfoLabelVisible.value = false;
   }, 4000);
 }
+
+function updateInfo(message) {
+  infoMessage.value = message;
+  isInfoLabelVisible.value = true;
+
+  setTimeout(() => {
+    isInfoLabelVisible.value = false;
+  }, 4000);
+}
 </script>
 
 <template>
@@ -48,7 +57,7 @@ function toggleInfo() {
       <img class="icon" :src="isDarkMode ? 'src/assets/menu.png' : 'src/assets/menu.png'" alt="Menu Icon"/>
     </button>
     <Menu :class="{ visible: isMenuVisible }"/>
-    <Calculator/>
+    <Calculator @update-info="updateInfo"/>
     <button @click="toggleInfo" id="info-icon" :class="{ 'dark-icon': isDarkMode }">
       <img class="icon" :src="isDarkMode ? 'src/assets/info_dark_mode.png' : 'src/assets/info.png'" alt="Info Icon"/>
     </button>

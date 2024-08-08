@@ -56,7 +56,7 @@
 import {ref, onMounted} from 'vue';
 
 export default {
-  setup() {
+  setup(props, {emit}) {
     const displayValue = ref('');
     const isErrorDisplayed = ref(false);
     const isResultDisplayed = ref(false);
@@ -114,7 +114,18 @@ export default {
     };
 
     const copyToClipboard = () => {
-      navigator.clipboard.writeText(displayValue.value).then(() => alert('Copied!')).catch(err => console.error('Failed to copy text: ', err));
+      if (displayValue.value === '' || displayValue.value === null) {
+        emit('update-info', 'No value to copy');
+      } else {
+        navigator.clipboard.writeText(displayValue.value)
+            .then(() => {
+              emit('update-info', 'Copied!');
+            })
+            .catch(err => {
+              console.error('Failed to copy text: ', err);
+              emit('update-info', 'Error: Failed to copy');
+            });
+      }
     };
 
     const calculate = () => {
