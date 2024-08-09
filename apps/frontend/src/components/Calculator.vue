@@ -198,6 +198,7 @@ export default {
           'Enter': calculate,
           'Backspace': backspace,
           'Escape': clearDisplay,
+          'n': negation,
           's': () => scientificFunction('sin'),
           'c': () => scientificFunction('cos'),
           't': () => scientificFunction('tan'),

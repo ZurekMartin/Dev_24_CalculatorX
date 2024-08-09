@@ -60,6 +60,13 @@ body {
     border-radius: 20px 0 0 20px;
 }
 
+.account-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 80vh;
+}
+
 .history.visible, .menu.visible {
     transform: translateX(0);
 }
@@ -94,7 +101,7 @@ h1, h2 {
     max-width: 90vw;
 }
 
-#display {
+#display, .login-section input {
     width: 90%;
     padding: 20px;
     font-size: 2em;
@@ -104,6 +111,30 @@ h1, h2 {
     margin-bottom: 20px;
     background-color: #f9f9f9;
     color: #333;
+}
+
+.login-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 20px;
+}
+
+.login-section label {
+    margin-bottom: 8px;
+}
+
+.login-section input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    text-align: left;
+}
+
+.logout-section {
+    display: flex;
 }
 
 .buttons {
@@ -161,6 +192,12 @@ h1, h2 {
 
 .toggle:hover {
     background-color: #303f9f;
+}
+
+#login-button, #logout-button {
+    padding: 12px 24px;
+    font-size: 16px;
+    width: 40%;
 }
 
 #infoLabel {
