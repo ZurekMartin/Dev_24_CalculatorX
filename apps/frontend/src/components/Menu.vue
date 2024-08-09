@@ -1,20 +1,13 @@
 <script setup>
-import { ref } from 'vue';
-
-const isMenuVisible = ref(false);
+const props = defineProps({ isDarkMode: Boolean });
+const emit = defineEmits(['cancel-menu', 'toggle-theme']);
 
 const toggleTheme = () => emit('toggle-theme');
 const cancelMenu = () => emit('cancel-menu');
-
-const props = defineProps({
-  isDarkMode: Boolean
-});
-
-const emit = defineEmits(['cancel-menu', 'toggle-theme']);
 </script>
 
 <template>
-  <div id="menu" class="menu" :class="{ visible: isMenuVisible }">
+  <div id="menu" class="menu">
     <button @click="toggleTheme" id="theme-icon" :class="{ 'dark-icon': props.isDarkMode }">
       <img class="icon" :src="props.isDarkMode ? 'src/assets/sun.png' : 'src/assets/moon.png'" alt="Theme Icon"/>
     </button>

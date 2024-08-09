@@ -52,12 +52,11 @@ onMounted(() => {
     <button @click="openHistory" id="history-icon" :class="{ 'dark-icon': isDarkMode }">
       <img class="icon" :src="historyIconSrc" alt="History Icon"/>
     </button>
-    <History :class="{ visible: isHistoryVisible }" @cancel-history="handleCancelHistory"/>
+    <History :class="{ visible: isHistoryVisible }" :is-dark-mode="isDarkMode" @cancel-history="handleCancelHistory"/>
     <button @click="openMenu" id="menu-icon" :class="{ 'dark-icon': isDarkMode }">
       <img class="icon" :src="menuIconSrc" alt="Menu Icon"/>
     </button>
-    <Menu :class="{ visible: isMenuVisible }" :is-dark-mode="isDarkMode" @toggle-theme="toggleTheme"
-          @cancel-menu="handleCancelMenu"/>
+    <Menu :class="{ visible: isMenuVisible }" :is-dark-mode="isDarkMode" @toggle-theme="toggleTheme" @cancel-menu="handleCancelMenu"/>
     <Calculator @update-info="updateInfo"/>
     <button @click="toggleInfo" id="info-icon" :class="{ 'dark-icon': isDarkMode }">
       <img class="icon" :src="infoIconSrc" alt="Info Icon"/>
