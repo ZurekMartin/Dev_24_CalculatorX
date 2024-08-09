@@ -44,12 +44,10 @@ const updateInfo = (message) => {
 /* Temporary */
 const login = () => {
   isLoggedIn.value = true;
-  updateInfo('User logged in');
 };
 
 const logout = () => {
   isLoggedIn.value = false;
-  updateInfo('User logged out');
 };
 /* Temporary */
 
