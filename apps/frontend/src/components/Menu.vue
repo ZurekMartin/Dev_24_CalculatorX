@@ -1,8 +1,10 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, defineEmits } from 'vue';
 
 const isDarkMode = ref(false);
 const isMenuVisible = ref(false);
+
+const emit = defineEmits(['cancel-menu']);
 
 function toggleTheme() {
   isDarkMode.value = !isDarkMode.value;
@@ -10,7 +12,7 @@ function toggleTheme() {
 }
 
 function cancelMenu() {
-  isMenuVisible.value = false;
+  emit('cancel-menu');
 }
 </script>
 
@@ -21,7 +23,7 @@ function cancelMenu() {
     </button>
     <h2>Menu</h2>
     <button @click="cancelMenu" id="cancel-menu-icon" :class="{ 'dark-icon': isDarkMode }">
-      <img class="icon" :src="isDarkMode ? 'src/assets/cancel_dark_theme.png' : 'src/assets/cancel.png'" alt="Cancel Menu Icon"/>
+      <img class="icon" :src="isDarkMode ? 'src/assets/cancel_dark_mode.png' : 'src/assets/cancel.png'" alt="Cancel Menu Icon"/>
     </button>
   </div>
 </template>

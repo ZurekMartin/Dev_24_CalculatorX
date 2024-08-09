@@ -1,5 +1,5 @@
 <script setup>
-import {ref} from 'vue';
+import { ref } from 'vue';
 import History from './components/History.vue';
 import Menu from './components/Menu.vue';
 import Calculator from './components/Calculator.vue';
@@ -11,12 +11,20 @@ const isInfoLabelVisible = ref(false);
 const infoMessage = ref('');
 const infoIconClickCount = ref(0);
 
-function toggleHistory() {
-  isHistoryVisible.value = !isHistoryVisible.value;
+const openHistory = () => {
+  isHistoryVisible.value = true;
+};
+
+function handleCancelHistory() {
+  isHistoryVisible.value = false;
 }
 
-function toggleMenu() {
-  isMenuVisible.value = !isMenuVisible.value;
+const openMenu = () => {
+  isMenuVisible.value = true;
+};
+
+function handleCancelMenu() {
+  isMenuVisible.value = false;
 }
 
 function toggleInfo() {
@@ -48,15 +56,15 @@ function updateInfo(message) {
 
 <template>
   <div id="app" :class="{ 'dark-theme': isDarkMode }">
-    <button @click="toggleHistory" id="history-icon" :class="{ 'dark-icon': isDarkMode }">
+    <button @click="openHistory" id="history-icon" :class="{ 'dark-icon': isDarkMode }">
       <img class="icon" :src="isDarkMode ? 'src/assets/history_dark_mode.png' : 'src/assets/history.png'"
            alt="History Icon"/>
     </button>
-    <History :class="{ visible: isHistoryVisible }"/>
-    <button @click="toggleMenu" id="menu-icon" :class="{ 'dark-icon': isDarkMode }">
+    <History :class="{ visible: isHistoryVisible }" @cancel-history="handleCancelHistory"/>
+    <button @click="openMenu" id="menu-icon" :class="{ 'dark-icon': isDarkMode }">
       <img class="icon" :src="isDarkMode ? 'src/assets/menu.png' : 'src/assets/menu.png'" alt="Menu Icon"/>
     </button>
-    <Menu :class="{ visible: isMenuVisible }"/>
+    <Menu :class="{ visible: isMenuVisible }" @cancel-menu="handleCancelMenu"/>
     <Calculator @update-info="updateInfo"/>
     <button @click="toggleInfo" id="info-icon" :class="{ 'dark-icon': isDarkMode }">
       <img class="icon" :src="isDarkMode ? 'src/assets/info_dark_mode.png' : 'src/assets/info.png'" alt="Info Icon"/>
