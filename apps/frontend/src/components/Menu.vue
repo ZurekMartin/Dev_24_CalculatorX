@@ -1,11 +1,28 @@
 <script setup>
-const props = defineProps({isDarkMode: Boolean, isLoggedIn: Boolean});
+import { ref } from 'vue';
+
+const props = defineProps({ isDarkMode: Boolean, isLoggedIn: Boolean });
 const emit = defineEmits(['cancel-menu', 'toggle-theme', 'login', 'logout']);
+
+const infoAccountMessage = ref('');
+const isInfoLabelAccountMessageVisible = ref(false);
 
 const toggleTheme = () => emit('toggle-theme');
 const cancelMenu = () => emit('cancel-menu');
-const login = () => emit('login');
-const logout = () => emit('logout');
+const login = () => {
+  emit('login');
+  updateAccountMessage('Successfully logged in!');
+};
+const logout = () => {
+  emit('logout');
+  updateAccountMessage('Successfully logged out!');
+};
+
+const updateAccountMessage = (message) => {
+  infoAccountMessage.value = message;
+  isInfoLabelAccountMessageVisible.value = true;
+  setTimeout(() => isInfoLabelAccountMessageVisible.value = false, 4000);
+};
 </script>
 
 <template>
@@ -34,5 +51,6 @@ const logout = () => emit('logout');
         </button>
       </div>
     </div>
+    <span id="infoLabelAccount" class="info-label" :class="{ visible: isInfoLabelAccountMessageVisible }">{{ infoAccountMessage }}</span>
   </div>
 </template>

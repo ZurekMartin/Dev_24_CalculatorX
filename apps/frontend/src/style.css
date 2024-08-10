@@ -203,8 +203,7 @@ h1, h2 {
     width: 40%;
 }
 
-#infoLabel {
-    position: fixed;
+.info-label {
     padding: 16px 24px;
     background-color: #4caf50;
     color: #fff;
@@ -212,8 +211,22 @@ h1, h2 {
     display: none;
 }
 
-#infoLabel.visible {
+.info-label.visible {
     display: block;
+}
+
+#infoLabel {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+}
+
+#infoLabelAccount {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
 }
 
 body.dark-theme {
@@ -274,7 +287,7 @@ body.dark-theme .toggle:hover {
     background-color: #2d2d8f;
 }
 
-body.dark-theme #infoLabel {
+body.dark-theme .info-label {
     background-color: #357a38;
 }
 

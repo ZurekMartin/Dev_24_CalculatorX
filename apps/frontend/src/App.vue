@@ -73,6 +73,6 @@ onMounted(() => {
     <button @click="toggleInfo" id="info-icon" :class="{ 'dark-icon': isDarkMode }">
       <img class="icon" :src="infoIconSrc" alt="Info Icon"/>
     </button>
-    <span id="infoLabel" :class="{ visible: isInfoLabelVisible }">{{ infoMessage }}</span>
+    <span id="infoLabel" class="info-label" :class="{ visible: isInfoLabelVisible }">{{ infoMessage }}</span>
   </div>
 </template>
