@@ -53,10 +53,13 @@
 </template>
 
 <script>
-import {ref, onMounted} from 'vue';
+import {ref, onMounted, onBeforeUnmount} from 'vue';
 
 export default {
-  setup() {
+  props: {
+    isMenuVisible: Boolean
+  },
+  setup(props, {emit}) {
     const displayValue = ref('');
     const isErrorDisplayed = ref(false);
     const isResultDisplayed = ref(false);
@@ -102,7 +105,7 @@ export default {
       }
 
       if (number === '.') {
-        const parts = displayValue.value.split(/[\+\-\*\/]/).map(part => part.trim());
+        const parts = displayValue.value.split(/[+\-*\/]/).map(part => part.trim());
         const lastPart = parts[parts.length - 1];
 
         if (lastPart.includes('.')) {
@@ -114,7 +117,18 @@ export default {
     };
 
     const copyToClipboard = () => {
-      navigator.clipboard.writeText(displayValue.value).then(() => alert('Copied!')).catch(err => console.error('Failed to copy text: ', err));
+      if (displayValue.value === '' || displayValue.value === null) {
+        emit('update-info', 'No value to copy');
+      } else {
+        navigator.clipboard.writeText(displayValue.value)
+            .then(() => {
+              emit('update-info', 'Copied!');
+            })
+            .catch(err => {
+              console.error('Failed to copy text: ', err);
+              emit('update-info', 'Error: Failed to copy');
+            });
+      }
     };
 
     const calculate = () => {
@@ -165,46 +179,57 @@ export default {
       displayValue.value = functions[func] ? functions[func](value).toString() : 'Error';
     };
 
-    onMounted(() => {
-      document.addEventListener('keydown', (event) => {
-        const key = event.key;
-        const keyActions = {
-          '0': () => appendNumber(key),
-          '1': () => appendNumber(key),
-          '2': () => appendNumber(key),
-          '3': () => appendNumber(key),
-          '4': () => appendNumber(key),
-          '5': () => appendNumber(key),
-          '6': () => appendNumber(key),
-          '7': () => appendNumber(key),
-          '8': () => appendNumber(key),
-          '9': () => appendNumber(key),
-          '.': () => appendNumber(key),
-          '+': () => operate(key),
-          '-': () => operate(key),
-          '*': () => operate(key),
-          '/': () => operate(key),
-          'Enter': calculate,
-          'Backspace': backspace,
-          'Escape': clearDisplay,
-          's': () => scientificFunction('sin'),
-          'c': () => scientificFunction('cos'),
-          't': () => scientificFunction('tan'),
-          'l': () => scientificFunction('log'),
-          'r': () => scientificFunction('sqrt'),
-          'x': () => scientificFunction('pow'),
-          'e': () => scientificFunction('exp'),
-          'p': () => {
-            displayValue.value = Math.PI.toString();
-          },
-          'T': toggleScientific
-        };
+    const handleKeydown = (event) => {
+      if (props.isMenuVisible) {
+        return;
+      }
 
-        if (keyActions[key]) {
-          keyActions[key]();
-          event.preventDefault();
-        }
-      });
+      const key = event.key;
+      const keyActions = {
+        '0': () => appendNumber(key),
+        '1': () => appendNumber(key),
+        '2': () => appendNumber(key),
+        '3': () => appendNumber(key),
+        '4': () => appendNumber(key),
+        '5': () => appendNumber(key),
+        '6': () => appendNumber(key),
+        '7': () => appendNumber(key),
+        '8': () => appendNumber(key),
+        '9': () => appendNumber(key),
+        '.': () => appendNumber(key),
+        '+': () => operate(key),
+        '-': () => operate(key),
+        '*': () => operate(key),
+        '/': () => operate(key),
+        'Enter': calculate,
+        'Backspace': backspace,
+        'Escape': clearDisplay,
+        'n': negation,
+        's': () => scientificFunction('sin'),
+        'c': () => scientificFunction('cos'),
+        't': () => scientificFunction('tan'),
+        'l': () => scientificFunction('log'),
+        'r': () => scientificFunction('sqrt'),
+        'x': () => scientificFunction('pow'),
+        'e': () => scientificFunction('exp'),
+        'p': () => {
+          displayValue.value = Math.PI.toString();
+        },
+        'T': toggleScientific
+      };
+
+      if (keyActions[key]) {
+        keyActions[key]();
+        event.preventDefault();
+      }
+    };
+
+    onMounted(() => {
+      document.addEventListener('keydown', handleKeydown);
+    });
+
+    onBeforeUnmount(() => {
+      document.removeEventListener('keydown', handleKeydown);
     });
 
     return {

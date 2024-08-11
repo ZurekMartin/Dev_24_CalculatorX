@@ -1,220 +1,320 @@
 body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: #f0f0f0;
-  margin: 0;
-  font-family: 'Roboto', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
 }
 
 .icon {
-  width: 40px;
-  height: 40px;
+    width: 40px;
+    height: 40px;
 }
 
-#history-icon, #theme-icon, #info-icon {
-  position: absolute;
-  cursor: pointer;
+#history-icon, #menu-icon, #info-icon, #cancel-history-icon, #theme-icon, #cancel-menu-icon {
+    position: absolute;
+    background: none;
+    cursor: pointer;
+    border: none;
 }
 
-#history-icon {
-  top: 24px;
-  left: 24px;
-  z-index: 2;
-  transition: opacity 0.32s ease;
-  opacity: 1;
+#history-icon, #menu-icon, #cancel-history-icon, #theme-icon, #cancel-menu-icon {
+    top: 24px;
 }
 
-#theme-icon {
-  top: 24px;
-  right: 24px;
+#history-icon, #theme-icon, #info-icon, #cancel-history-icon {
+    left: 24px;
 }
 
-#info-icon {
-  bottom: 24px;
-  left: 24px;
+#menu-icon, #cancel-menu-icon, #infoLabel {
+    right: 24px;
+}
+
+#info-icon, #infoLabel {
+    bottom: 24px;
+}
+
+.history, .menu {
+    position: fixed;
+    top: 0;
+    width: 480px;
+    height: 100%;
+    z-index: 1;
+    padding: 0 24px;
+    background-color: #f9f9f9;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    transform: translateX(100%);
+    transition: transform 0.5s ease;
 }
 
 .history {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 480px;
-  height: 100%;
-  border-radius: 0 20px 20px 0;
-  background-color: #f9f9f9;
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
-  transform: translateX(-100%);
-  transition: transform 0.5s ease;
-  z-index: 1;
+    left: 0;
+    border-radius: 0 20px 20px 0;
+    transform: translateX(-100%);
 }
 
-.history.visible {
-  transform: translateX(0%);
+.menu {
+    right: 0;
+    border-radius: 20px 0 0 20px;
+}
+
+.account-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 80vh;
+}
+
+.history.visible, .menu.visible {
+    transform: translateX(0);
 }
 
 /* Temporary */
 .history-entry {
-  margin-left: auto;
-  margin-right: auto;
-  font-size: 16px;
-  color: #000;
-  background-color: #e0e0e0;
-  padding: 24px;
-  margin-bottom: 4px;
-  border-radius: 4px;
-  max-width: 400px;
-  width: 100%;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+    color: #000;
+    background-color: #e0e0e0;
+    padding: 24px;
+    margin-bottom: 4px;
+    border-radius: 4px;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+/* Temporary */
+
 h1, h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #333;
-  font-size: 2em;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 2em;
 }
 
 .calculator {
-  background-color: #fff;
-  padding: 40px;
-  border-radius: 20px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-  width: 400px;
-  max-width: 90vw;
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    width: 400px;
+    max-width: 90vw;
 }
 
-#display {
-  width: 90%;
-  padding: 20px;
-  font-size: 2em;
-  text-align: right;
-  border: 2px solid #ccc;
-  border-radius: 10px;
-  margin-bottom: 20px;
-  background-color: #f9f9f9;
-  color: #333;
+#display, .login-section input {
+    width: 90%;
+    padding: 20px;
+    font-size: 2em;
+    text-align: right;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+.login-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 20px;
+}
+
+.login-section label {
+    margin-bottom: 8px;
+}
+
+.login-section input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    text-align: left;
+}
+
+.logout-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .row {
-  display: flex;
-  gap: 15px;
+    display: flex;
+    gap: 15px;
 }
 
 .button {
-  flex: 1;
-  padding: 20px;
-  font-size: 1.5em;
-  background-color: #e0e0e0;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background-color 0.3s, transform 0.1s;
+    flex: 1;
+    padding: 20px;
+    font-size: 1.5em;
+    background-color: #e0e0e0;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
 }
 
 .button:hover {
-  background-color: #d0d0d0;
+    background-color: #d0d0d0;
 }
 
 .button:active {
-  transform: scale(0.95);
+    transform: scale(0.95);
 }
 
 .clear {
-  background-color: #ff4d4d;
-  color: #fff;
+    background-color: #ff4d4d;
+    color: #fff;
 }
 
 .clear:hover {
-  background-color: #ff3333;
+    background-color: #ff3333;
 }
 
 .equal {
-  background-color: #4caf50;
-  color: #fff;
+    background-color: #4caf50;
+    color: #fff;
 }
 
 .equal:hover {
-  background-color: #45a045;
+    background-color: #45a045;
 }
 
 .toggle {
-  background-color: #3f51b5;
-  color: #fff;
+    background-color: #3f51b5;
+    color: #fff;
 }
 
 .toggle:hover {
-  background-color: #303f9f;
+    background-color: #303f9f;
+}
+
+.account {
+    cursor: pointer;
+    color: #0073e6;
+    text-align: center;
+    text-decoration: underline;
+    margin-top: 10px;
+}
+
+.account:hover {
+    color: #005bb5;
+}
+
+#login-button, #logout-button, #register-button {
+    padding: 12px 24px;
+    font-size: 16px;
+    width: 40%;
+}
+
+.info-label {
+    padding: 16px 24px;
+    background-color: #4caf50;
+    color: #fff;
+    border-radius: 16px;
+    display: none;
+}
+
+.info-label.visible {
+    display: block;
 }
 
 #infoLabel {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  padding: 16px 24px;
-  background-color: #4caf50;
-  color: #fff;
-  border-radius: 16px;
-  display: none;
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+}
+
+#infoLabelAccount {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
 }
 
 body.dark-theme {
-  background-color: #333;
-  color: #f0f0f0;
+    background-color: #333;
+    color: #f0f0f0;
 }
 
 body.dark-theme .history-entry {
-  color: #f0f0f0;
-  background-color: #333;
-  border-color: #555;
+    color: #f0f0f0;
+    background-color: #333;
+    border-color: #555;
 }
 
-body.dark-theme .calculator, body.dark-theme .history {
-  background-color: #424242;
+body.dark-theme .history, body.dark-theme .menu, body.dark-theme .calculator {
+    background-color: #424242;
 }
 
 body.dark-theme h1, body.dark-theme h2 {
-  color: #fff;
+    color: #fff;
 }
 
-body.dark-theme #display {
-  background-color: #555;
-  color: #fff;
-  border-color: #777;
+body.dark-theme #display, body.dark-theme #username, body.dark-theme #password {
+    background-color: #555;
+    color: #fff;
+    border-color: #777;
 }
 
 body.dark-theme .button {
-  background-color: #616161;
-  color: #f0f0f0;
+    background-color: #616161;
+    color: #f0f0f0;
+}
+
+body.dark-theme .button:hover {
+    background-color: #515151;
 }
 
 body.dark-theme .clear {
-  background-color: #b33333;
+    background-color: #b33333;
+}
+
+body.dark-theme .clear:hover {
+    background-color: #a33333;
 }
 
 body.dark-theme .equal {
-  background-color: #357a38;
+    background-color: #357a38;
+}
+
+body.dark-theme .equal:hover {
+    background-color: #2e6f34;
 }
 
 body.dark-theme .toggle {
-  background-color: #333399;
+    background-color: #333399;
 }
 
-body.dark-theme #infoLabel {
-  background-color: #357a38;
+body.dark-theme .toggle:hover {
+    background-color: #2d2d8f;
+}
+
+body.dark-theme .account {
+    color: #add8e6;
+}
+
+body.dark-theme .account:hover {
+    color: #87ceeb;
+}
+
+body.dark-theme .info-label {
+    background-color: #357a38;
 }
 
 .showed {
-  display: flex;
+    display: flex;
 }
 
 .hidden {
-  display: none;
+    display: none;
 }
