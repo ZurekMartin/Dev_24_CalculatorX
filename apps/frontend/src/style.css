@@ -197,7 +197,19 @@ h1, h2 {
     background-color: #303f9f;
 }
 
-#login-button, #logout-button {
+.account {
+    cursor: pointer;
+    color: #0073e6;
+    text-align: center;
+    text-decoration: underline;
+    margin-top: 10px;
+}
+
+.account:hover {
+    color: #005bb5;
+}
+
+#login-button, #logout-button, #register-button {
     padding: 12px 24px;
     font-size: 16px;
     width: 40%;
@@ -285,6 +297,14 @@ body.dark-theme .toggle {
 
 body.dark-theme .toggle:hover {
     background-color: #2d2d8f;
+}
+
+body.dark-theme .account {
+    color: #add8e6;
+}
+
+body.dark-theme .account:hover {
+    color: #87ceeb;
 }
 
 body.dark-theme .info-label {

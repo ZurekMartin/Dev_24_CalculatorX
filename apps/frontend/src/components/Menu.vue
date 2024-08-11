@@ -2,10 +2,11 @@
 import {ref} from 'vue';
 
 const props = defineProps({isDarkMode: Boolean, isLoggedIn: Boolean});
-const emit = defineEmits(['cancel-menu', 'toggle-theme', 'login', 'logout']);
+const emit = defineEmits(['cancel-menu', 'toggle-theme', 'login', 'logout', 'register']);
 
 const infoAccountMessage = ref('');
 const isInfoLabelAccountMessageVisible = ref(false);
+const isRegistering = ref(false);
 
 const toggleTheme = () => emit('toggle-theme');
 const cancelMenu = () => emit('cancel-menu');
@@ -16,6 +17,13 @@ const login = () => {
 const logout = () => {
   emit('logout');
   updateAccountMessage('Successfully logged out!');
+};
+const register = () => {
+  emit('register');
+  updateAccountMessage('Successfully registered!');
+};
+const toggleRegistering = () => {
+  isRegistering.value = !isRegistering.value;
 };
 
 const updateAccountMessage = (message) => {
@@ -37,12 +45,15 @@ const updateAccountMessage = (message) => {
     </button>
     <div class="account-section">
       <div v-if="!props.isLoggedIn" class="login-section">
-        <label for="username">Username:</label>
+        <label for="username">{{ isRegistering ? 'New Username:' : 'Username:' }}</label>
         <input type="text" id="username"/>
-        <label for="password">Password:</label>
+        <label for="password">{{ isRegistering ? 'New Password:' : 'Password:' }}</label>
         <input type="password" id="password"/>
-        <button class="button toggle" @click="login" id="login-button" :class="{ 'dark-icon': props.isDarkMode }">
+        <button v-if="!isRegistering" class="button toggle" @click="login" id="login-button" :class="{ 'dark-icon': props.isDarkMode }">
           Login
+        </button>
+        <button v-else class="button toggle" @click="register" id="register-button" :class="{ 'dark-icon': props.isDarkMode }">
+          Register
         </button>
       </div>
       <div v-else class="logout-section">
@@ -50,6 +61,9 @@ const updateAccountMessage = (message) => {
           Logout
         </button>
       </div>
+      <span v-if="!props.isLoggedIn" @click="toggleRegistering" class="account" :class="{ 'dark-icon': props.isDarkMode }">
+          {{ isRegistering ? 'Already have an account?' : 'Not registered yet?' }}
+        </span>
     </div>
     <span id="infoLabelAccount" class="info-label"
           :class="{ visible: isInfoLabelAccountMessageVisible }">{{ infoAccountMessage }}</span>
