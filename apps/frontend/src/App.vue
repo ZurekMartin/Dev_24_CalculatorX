@@ -42,12 +42,8 @@ const updateInfo = (message) => {
 };
 
 /* Temporary */
-const login = () => {
-  isLoggedIn.value = true;
-};
-
-const logout = () => {
-  isLoggedIn.value = false;
+const toggleAccount = () => {
+  isLoggedIn.value = !isLoggedIn.value;
 };
 /* Temporary */
 
@@ -68,7 +64,7 @@ onMounted(() => {
       <img class="icon" :src="menuIconSrc" alt="Menu Icon"/>
     </button>
     <Menu :class="{ visible: isMenuVisible }" :is-dark-mode="isDarkMode" :is-logged-in="isLoggedIn"
-          @toggle-theme="toggleTheme" @cancel-menu="handleCancelMenu" @login="login" @logout="logout"/>
+          @toggle-theme="toggleTheme" @cancel-menu="handleCancelMenu" @login="toggleAccount" @logout="toggleAccount"/>
     <Calculator @update-info="updateInfo"/>
     <button @click="toggleInfo" id="info-icon" :class="{ 'dark-icon': isDarkMode }">
       <img class="icon" :src="infoIconSrc" alt="Info Icon"/>
