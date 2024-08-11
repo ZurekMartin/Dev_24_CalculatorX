@@ -45,15 +45,15 @@ const updateAccountMessage = (message) => {
     </button>
     <div class="account-section">
       <div v-if="!props.isLoggedIn" class="login-section">
-        <label for="username">{{ isRegistering ? 'New Username:' : 'Username:' }}</label>
+        <label for="username">{{ isRegistering ? 'New Account Username:' : 'Username:' }}</label>
         <input type="text" id="username"/>
-        <label for="password">{{ isRegistering ? 'New Password:' : 'Password:' }}</label>
+        <label for="password">{{ isRegistering ? 'New Account Password:' : 'Password:' }}</label>
         <input type="password" id="password"/>
-        <button v-if="!isRegistering" class="button toggle" @click="login" id="login-button" :class="{ 'dark-icon': props.isDarkMode }">
-          Login
+        <button v-if="!isRegistering" class="button toggle" @click="login" id="login-button"
+                :class="{ 'dark-icon': props.isDarkMode }">Login
         </button>
-        <button v-else class="button toggle" @click="register" id="register-button" :class="{ 'dark-icon': props.isDarkMode }">
-          Register
+        <button v-else class="button toggle" @click="register" id="register-button"
+                :class="{ 'dark-icon': props.isDarkMode }">Register
         </button>
       </div>
       <div v-else class="logout-section">
@@ -61,9 +61,10 @@ const updateAccountMessage = (message) => {
           Logout
         </button>
       </div>
-      <span v-if="!props.isLoggedIn" @click="toggleRegistering" class="account" :class="{ 'dark-icon': props.isDarkMode }">
-          {{ isRegistering ? 'Already have an account?' : 'Not registered yet?' }}
-        </span>
+      <span v-if="!props.isLoggedIn" @click="toggleRegistering" class="account"
+            :class="{ 'dark-icon': props.isDarkMode }">
+        {{ isRegistering ? 'Already have an account?' : 'Not registered yet?' }}
+      </span>
     </div>
     <span id="infoLabelAccount" class="info-label"
           :class="{ visible: isInfoLabelAccountMessageVisible }">{{ infoAccountMessage }}</span>
