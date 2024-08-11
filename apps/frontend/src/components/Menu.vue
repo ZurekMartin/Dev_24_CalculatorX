@@ -1,7 +1,7 @@
 <script setup>
-import { ref } from 'vue';
+import {ref} from 'vue';
 
-const props = defineProps({ isDarkMode: Boolean, isLoggedIn: Boolean });
+const props = defineProps({isDarkMode: Boolean, isLoggedIn: Boolean});
 const emit = defineEmits(['cancel-menu', 'toggle-theme', 'login', 'logout']);
 
 const infoAccountMessage = ref('');
@@ -51,6 +51,7 @@ const updateAccountMessage = (message) => {
         </button>
       </div>
     </div>
-    <span id="infoLabelAccount" class="info-label" :class="{ visible: isInfoLabelAccountMessageVisible }">{{ infoAccountMessage }}</span>
+    <span id="infoLabelAccount" class="info-label"
+          :class="{ visible: isInfoLabelAccountMessageVisible }">{{ infoAccountMessage }}</span>
   </div>
 </template>
