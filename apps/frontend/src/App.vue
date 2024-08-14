@@ -41,11 +41,17 @@ const updateInfo = (message) => {
   setTimeout(() => isInfoLabelVisible.value = false, 4000);
 };
 
-/* Temporary */
-const toggleAccount = () => {
-  isLoggedIn.value = !isLoggedIn.value;
+const handleLogin = () => {
+  isLoggedIn.value = true;
 };
-/* Temporary */
+
+const handleLogout = () => {
+  isLoggedIn.value = false;
+};
+
+const handleRegister = () => {
+  isLoggedIn.value = true;
+};
 
 onMounted(() => {
   const CalculatorXTheme = localStorage.getItem('CalculatorXTheme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
@@ -64,7 +70,7 @@ onMounted(() => {
       <img class="icon" :src="menuIconSrc" alt="Menu Icon"/>
     </button>
     <Menu :class="{ visible: isMenuVisible }" :is-dark-mode="isDarkMode" :is-logged-in="isLoggedIn"
-          @toggle-theme="toggleTheme" @cancel-menu="handleCancelMenu" @login="toggleAccount" @logout="toggleAccount"/>
+          @toggle-theme="toggleTheme" @cancel-menu="handleCancelMenu" @login="handleLogin" @logout="handleLogout" @register="handleRegister"/>
     <Calculator :is-menu-visible="isMenuVisible" @update-info="updateInfo"/>
     <button @click="toggleInfo" id="info-icon" :class="{ 'dark-icon': isDarkMode }">
       <img class="icon" :src="infoIconSrc" alt="Info Icon"/>
