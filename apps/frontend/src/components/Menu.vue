@@ -92,7 +92,7 @@ const updateAccountMessage = (message) => {
           Logout
         </button>
       </div>
-      <span v-if="!props.isLoggedIn" @click="toggleRegistering" class="account"
+      <span v-if="!props.isLoggedIn" @click="toggleRegistering" class="action-link"
             :class="{ 'dark-icon': props.isDarkMode }">
         {{ isRegistering ? 'Already have an account?' : 'Not registered yet?' }}
       </span>

@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase';
 
 const props = defineProps({ isDarkMode: Boolean });
@@ -31,6 +31,25 @@ const loadCalculationHistory = async () => {
   }
 };
 
+const deleteHistory = async () => {
+  try {
+    const user = auth.currentUser;
+    if (user) {
+      const userDocRef = doc(db, 'users', user.uid);
+      await updateDoc(userDocRef, {historyEntries: []});
+      await loadCalculationHistory();
+      emit('update-info', 'History deleted');
+    } else {
+      localStorage.removeItem('historyEntries');
+      historyEntries.value = [];
+      emit('update-info', 'Local history deleted');
+    }
+  } catch (error) {
+    console.error('Error deleting history: ', error);
+    emit('update-info', 'Error: Failed to delete history');
+  }
+};
+
 const cancelHistory = () => emit('cancel-history');
 
 onMounted(() => {
@@ -55,5 +74,6 @@ onUnmounted(() => {
     <div class="history-entries">
       <div v-for="entry in historyEntries.slice(0, 12)" :key="entry" class="history-entry">{{ entry }}</div>
     </div>
+    <div class="action-link bottom" @click="deleteHistory">Delete history</div>
   </div>
 </template>

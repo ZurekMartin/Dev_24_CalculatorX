@@ -200,7 +200,7 @@ h1, h2 {
     background-color: #303f9f;
 }
 
-.account {
+.action-link {
     cursor: pointer;
     color: #0073e6;
     text-align: center;
@@ -208,7 +208,7 @@ h1, h2 {
     margin-top: 10px;
 }
 
-.account:hover {
+.action-link:hover {
     color: #005bb5;
 }
 
@@ -302,16 +302,21 @@ body.dark-theme .toggle:hover {
     background-color: #2d2d8f;
 }
 
-body.dark-theme .account {
+body.dark-theme .action-link {
     color: #add8e6;
 }
 
-body.dark-theme .account:hover {
+body.dark-theme .action-link:hover {
     color: #87ceeb;
 }
 
 body.dark-theme .info-label {
     background-color: #357a38;
+}
+
+.bottom {
+    margin-top: auto;
+    margin-bottom: 32px;
 }
 
 .showed {
