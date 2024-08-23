@@ -2,6 +2,9 @@
 import { ref } from 'vue';
 import { auth } from '../firebase';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
+
+const db = getFirestore();
 
 const props = defineProps({ isDarkMode: Boolean, isLoggedIn: Boolean });
 const emit = defineEmits(['cancel-menu', 'toggle-theme', 'login', 'logout', 'register']);
@@ -37,7 +40,14 @@ const logout = async () => {
 
 const register = async () => {
   try {
-    await createUserWithEmailAndPassword(auth, username.value, password.value);
+    const userCredential = await createUserWithEmailAndPassword(auth, username.value, password.value);
+    const user = userCredential.user;
+    await setDoc(doc(db, 'users', user.uid), {
+      uid: user.uid,
+      email: user.email,
+      createdAt: new Date(),
+      historyEntries: []
+    });
     emit('register');
     updateAccountMessage('Successfully registered!');
   } catch (error) {
