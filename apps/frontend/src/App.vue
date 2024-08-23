@@ -3,6 +3,8 @@ import {ref, computed, onMounted} from 'vue';
 import History from './components/History.vue';
 import Menu from './components/Menu.vue';
 import Calculator from './components/Calculator.vue';
+import {auth, db} from './firebase';
+import {doc, getDoc, updateDoc} from 'firebase/firestore';
 
 const isHistoryVisible = ref(false);
 const isMenuVisible = ref(false);
@@ -21,10 +23,35 @@ const historyIconSrc = computed(() => isDarkMode.value ? 'src/assets/history_dar
 const menuIconSrc = computed(() => isDarkMode.value ? 'src/assets/menu_dark_mode.png' : 'src/assets/menu.png');
 const infoIconSrc = computed(() => isDarkMode.value ? 'src/assets/info_dark_mode.png' : 'src/assets/info.png');
 
-const toggleTheme = () => {
+const toggleTheme = async () => {
   isDarkMode.value = !isDarkMode.value;
   document.body.classList.toggle('dark-theme', isDarkMode.value);
-  localStorage.setItem('CalculatorXTheme', isDarkMode.value ? 'dark' : 'light');
+
+  const user = auth.currentUser;
+  if (user) {
+    const userDoc = doc(db, 'users', user.uid);
+    await updateDoc(userDoc, {
+      'profileSettings.theme': isDarkMode.value ? 'dark' : 'light'
+    });
+  } else {
+    localStorage.setItem('CalculatorXTheme', isDarkMode.value ? 'dark' : 'light');
+  }
+};
+
+const loadTheme = async () => {
+  const user = auth.currentUser;
+  if (user) {
+    const userDoc = doc(db, 'users', user.uid);
+    const docSnap = await getDoc(userDoc);
+    if (docSnap.exists()) {
+      const theme = docSnap.data().profileSettings.theme;
+      isDarkMode.value = theme === 'dark';
+    }
+  } else {
+    const CalculatorXTheme = localStorage.getItem('CalculatorXTheme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    isDarkMode.value = CalculatorXTheme === 'dark';
+  }
+  document.body.classList.toggle('dark-theme', isDarkMode.value);
 };
 
 const toggleInfo = () => {
@@ -41,14 +68,23 @@ const updateInfo = (message) => {
   setTimeout(() => isInfoLabelVisible.value = false, 4000);
 };
 
-const handleLogin = () => isLoggedIn.value = true;
-const handleLogout = () => isLoggedIn.value = false;
-const handleRegister = () => isLoggedIn.value = true;
+const handleLogin = async () => {
+  isLoggedIn.value = true;
+  await loadTheme();
+};
+
+const handleLogout = () => {
+  isLoggedIn.value = false;
+  loadTheme();
+};
+
+const handleRegister = async () => {
+  isLoggedIn.value = true;
+  await loadTheme();
+};
 
 onMounted(() => {
-  const CalculatorXTheme = localStorage.getItem('CalculatorXTheme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-  isDarkMode.value = CalculatorXTheme === 'dark';
-  document.body.classList.toggle('dark-theme', isDarkMode.value);
+  loadTheme();
 });
 </script>
 

@@ -45,7 +45,7 @@ const register = async () => {
       email: user.email,
       createdAt: new Date(),
       profileSettings: {
-        theme: ''
+        theme: props.isDarkMode ? 'dark' : 'light'
       },
       historyEntries: []
     });
