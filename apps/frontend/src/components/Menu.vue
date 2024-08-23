@@ -1,10 +1,8 @@
 <script setup>
 import { ref } from 'vue';
-import { auth } from '../firebase';
+import { auth, db } from '../firebase';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
-import { getFirestore, doc, setDoc } from 'firebase/firestore';
-
-const db = getFirestore();
+import { doc, setDoc } from 'firebase/firestore';
 
 const props = defineProps({ isDarkMode: Boolean, isLoggedIn: Boolean });
 const emit = defineEmits(['cancel-menu', 'toggle-theme', 'login', 'logout', 'register']);

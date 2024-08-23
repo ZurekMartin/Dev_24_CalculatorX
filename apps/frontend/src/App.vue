@@ -41,17 +41,9 @@ const updateInfo = (message) => {
   setTimeout(() => isInfoLabelVisible.value = false, 4000);
 };
 
-const handleLogin = () => {
-  isLoggedIn.value = true;
-};
-
-const handleLogout = () => {
-  isLoggedIn.value = false;
-};
-
-const handleRegister = () => {
-  isLoggedIn.value = true;
-};
+const handleLogin = () => isLoggedIn.value = true;
+const handleLogout = () => isLoggedIn.value = false;
+const handleRegister = () => isLoggedIn.value = true;
 
 onMounted(() => {
   const CalculatorXTheme = localStorage.getItem('CalculatorXTheme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');

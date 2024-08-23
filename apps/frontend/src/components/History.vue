@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
-import { getFirestore, doc, getDoc } from 'firebase/firestore';
-import { auth } from '../firebase';
+import { doc, getDoc } from 'firebase/firestore';
+import { auth, db } from '../firebase';
 
 const props = defineProps({ isDarkMode: Boolean });
 const emit = defineEmits(['cancel-history']);
@@ -12,16 +12,18 @@ const loadCalculationHistory = async () => {
   try {
     const user = auth.currentUser;
     if (user) {
-      const userDocRef = doc(getFirestore(), 'users', user.uid);
+      const userDocRef = doc(db, 'users', user.uid);
       const userDoc = await getDoc(userDocRef);
       if (userDoc.exists()) {
         const data = userDoc.data().historyEntries || [];
-        historyEntries.value = data.map(entry => entry.result || entry.value || 'Unknown result');
+        historyEntries.value = data.slice(-24).reverse().map(entry => entry.result || entry.value || 'Unknown result');
       } else {
         emit('update-info', 'No history found');
       }
     } else {
-      emit('update-info', 'User not logged in');
+      const localHistory = JSON.parse(localStorage.getItem('historyEntries')) || [];
+      historyEntries.value = localHistory.slice(-24).reverse().map(entry => entry.result || entry.value || 'Unknown result');
+      emit('update-info', 'User not logged in, showing local history');
     }
   } catch (error) {
     console.error('Error loading history: ', error);

@@ -54,8 +54,8 @@
 
 <script>
 import {ref, onMounted, onBeforeUnmount} from 'vue';
-import {getFirestore, doc, updateDoc, arrayUnion} from 'firebase/firestore';
-import {auth} from '../firebase';
+import {doc, updateDoc, arrayUnion} from 'firebase/firestore';
+import {auth, db} from '../firebase';
 
 export default {
   props: {
@@ -137,7 +137,7 @@ export default {
       try {
         const user = auth.currentUser;
         if (user) {
-          const userDocRef = doc(getFirestore(), 'users', user.uid);
+          const userDocRef = doc(db, 'users', user.uid);
           await updateDoc(userDocRef, {
             historyEntries: arrayUnion({
               result: formattedResult
@@ -153,6 +153,13 @@ export default {
       }
     };
 
+    const saveResultToLocalStorage = (formattedResult) => {
+      const historyEntries = JSON.parse(localStorage.getItem('historyEntries')) || [];
+      historyEntries.push({ result: formattedResult });
+      localStorage.setItem('historyEntries', JSON.stringify(historyEntries));
+      emit('update-info', 'Result saved locally!');
+    };
+
     const calculate = () => {
       if (!isErrorDisplayed.value) {
         try {
@@ -161,7 +168,13 @@ export default {
           const formattedResult = `${expression} = ${result}`;
           displayValue.value = result;
           isResultDisplayed.value = true;
-          saveResultToFirestore(formattedResult);
+
+          const user = auth.currentUser;
+          if (user) {
+            saveResultToFirestore(formattedResult);
+          } else {
+            saveResultToLocalStorage(formattedResult);
+          }
         } catch (error) {
           console.error("Error evaluating expression: ", error);
           displayValue.value = "Error";
