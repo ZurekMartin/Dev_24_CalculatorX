@@ -16,13 +16,13 @@ const loadCalculationHistory = async () => {
       const userDoc = await getDoc(userDocRef);
       if (userDoc.exists()) {
         const data = userDoc.data().historyEntries || [];
-        historyEntries.value = data.slice(-24).reverse().map(entry => entry.result || entry.value || 'Unknown result');
+        historyEntries.value = data.slice(-12).reverse().map(entry => entry.result || entry.value || 'Unknown result');
       } else {
         emit('update-info', 'No history found');
       }
     } else {
       const localHistory = JSON.parse(localStorage.getItem('historyEntries')) || [];
-      historyEntries.value = localHistory.slice(-24).reverse().map(entry => entry.result || entry.value || 'Unknown result');
+      historyEntries.value = localHistory.slice(-12).reverse().map(entry => entry.result || entry.value || 'Unknown result');
       emit('update-info', 'User not logged in, showing local history');
     }
   } catch (error) {
@@ -52,6 +52,8 @@ onUnmounted(() => {
            alt="Cancel History Icon"/>
     </button>
     <h2>History</h2>
-    <div v-for="entry in historyEntries" :key="entry" class="history-entry">{{ entry }}</div>
+    <div class="history-entries">
+      <div v-for="entry in historyEntries.slice(0, 12)" :key="entry" class="history-entry">{{ entry }}</div>
+    </div>
   </div>
 </template>

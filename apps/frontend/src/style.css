@@ -51,6 +51,9 @@ body {
 
 .history {
     left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     border-radius: 0 20px 20px 0;
     transform: translateX(-100%);
 }
@@ -71,6 +74,10 @@ body {
     transform: translateX(0);
 }
 
+.history-entries {
+    width: calc(100% - 24px);
+}
+
 .history-entry {
     font-size: 16px;
     color: #000;
@@ -78,8 +85,7 @@ body {
     padding: 24px;
     margin-bottom: 4px;
     border-radius: 4px;
-    max-width: 400px;
-    width: 100%;
+    width: calc(100% - 48px);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
