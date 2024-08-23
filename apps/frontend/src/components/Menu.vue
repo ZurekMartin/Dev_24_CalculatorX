@@ -4,7 +4,11 @@ import {auth, db} from '../firebase';
 import {signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut} from 'firebase/auth';
 import {doc, setDoc} from 'firebase/firestore';
 
-const props = defineProps({isDarkMode: Boolean, isLoggedIn: Boolean});
+const props = defineProps({
+  isDarkMode: Boolean,
+  isLoggedIn: Boolean,
+  isMenuVisible: Boolean
+});
 const emit = defineEmits(['cancel-menu', 'toggle-theme', 'login', 'logout', 'register']);
 
 const infoAccountMessage = ref('');
@@ -70,6 +74,8 @@ const updateAccountMessage = (message) => {
 };
 
 const handleKeydown = (event) => {
+  if (!props.isMenuVisible) return;
+
   const key = event.key;
 
   if (props.isLoggedIn) {
