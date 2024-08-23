@@ -155,7 +155,7 @@ export default {
 
     const saveResultToLocalStorage = (formattedResult) => {
       const historyEntries = JSON.parse(localStorage.getItem('historyEntries')) || [];
-      historyEntries.push({ result: formattedResult });
+      historyEntries.push({result: formattedResult});
       localStorage.setItem('historyEntries', JSON.stringify(historyEntries));
       emit('update-info', 'Result saved locally!');
     };

@@ -62,7 +62,8 @@ onMounted(() => {
       <img class="icon" :src="menuIconSrc" alt="Menu Icon"/>
     </button>
     <Menu :class="{ visible: isMenuVisible }" :is-dark-mode="isDarkMode" :is-logged-in="isLoggedIn"
-          @toggle-theme="toggleTheme" @cancel-menu="handleCancelMenu" @login="handleLogin" @logout="handleLogout" @register="handleRegister"/>
+          @toggle-theme="toggleTheme" @cancel-menu="handleCancelMenu" @login="handleLogin" @logout="handleLogout"
+          @register="handleRegister"/>
     <Calculator :is-menu-visible="isMenuVisible" @update-info="updateInfo"/>
     <button @click="toggleInfo" id="info-icon" :class="{ 'dark-icon': isDarkMode }">
       <img class="icon" :src="infoIconSrc" alt="Info Icon"/>

@@ -1,10 +1,10 @@
 <script setup>
-import { ref } from 'vue';
-import { auth, db } from '../firebase';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
+import {ref} from 'vue';
+import {auth, db} from '../firebase';
+import {signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut} from 'firebase/auth';
+import {doc, setDoc} from 'firebase/firestore';
 
-const props = defineProps({ isDarkMode: Boolean, isLoggedIn: Boolean });
+const props = defineProps({isDarkMode: Boolean, isLoggedIn: Boolean});
 const emit = defineEmits(['cancel-menu', 'toggle-theme', 'login', 'logout', 'register']);
 
 const infoAccountMessage = ref('');
@@ -44,6 +44,9 @@ const register = async () => {
       uid: user.uid,
       email: user.email,
       createdAt: new Date(),
+      profileSettings: {
+        theme: ''
+      },
       historyEntries: []
     });
     emit('register');

@@ -1,9 +1,9 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { auth, db } from '../firebase';
+import {ref, onMounted, onUnmounted} from 'vue';
+import {doc, getDoc, updateDoc} from 'firebase/firestore';
+import {auth, db} from '../firebase';
 
-const props = defineProps({ isDarkMode: Boolean });
+const props = defineProps({isDarkMode: Boolean});
 const emit = defineEmits(['cancel-history']);
 const historyEntries = ref([]);
 let intervalId = null;
