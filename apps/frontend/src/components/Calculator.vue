@@ -177,6 +177,7 @@ export default {
       };
 
       displayValue.value = functions[func] ? functions[func](value).toString() : 'Error';
+      isResultDisplayed.value = true;
     };
 
     const handleKeydown = (event) => {
