@@ -1,5 +1,5 @@
 <script setup>
-import {ref} from 'vue';
+import {ref, onMounted, onBeforeUnmount} from 'vue';
 import {auth, db} from '../firebase';
 import {signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut} from 'firebase/auth';
 import {doc, setDoc} from 'firebase/firestore';
@@ -12,6 +12,11 @@ const isInfoLabelAccountMessageVisible = ref(false);
 const isRegistering = ref(false);
 const username = ref('');
 const password = ref('');
+
+const usernameRef = ref(null);
+const passwordRef = ref(null);
+const loginButtonRef = ref(null);
+const registerButtonRef = ref(null);
 
 const toggleTheme = () => emit('toggle-theme');
 const cancelMenu = () => emit('cancel-menu');
@@ -44,9 +49,7 @@ const register = async () => {
       uid: user.uid,
       email: user.email,
       createdAt: new Date(),
-      profileSettings: {
-        theme: props.isDarkMode ? 'dark' : 'light'
-      },
+      profileSettings: {theme: props.isDarkMode ? 'dark' : 'light'},
       historyEntries: []
     });
     emit('register');
@@ -65,6 +68,41 @@ const updateAccountMessage = (message) => {
   isInfoLabelAccountMessageVisible.value = true;
   setTimeout(() => isInfoLabelAccountMessageVisible.value = false, 4000);
 };
+
+const handleKeydown = (event) => {
+  const key = event.key;
+
+  if (props.isLoggedIn) {
+    if (key === 'Escape') {
+      logout();
+    }
+    return;
+  }
+
+  if (key === 'ArrowUp') {
+    if (document.activeElement === passwordRef.value) {
+      usernameRef.value.focus();
+    }
+  } else if (key === 'ArrowDown') {
+    if (document.activeElement === usernameRef.value) {
+      passwordRef.value.focus();
+    }
+  } else if (key === 'Enter') {
+    if (isRegistering.value) {
+      register();
+    } else {
+      login();
+    }
+  }
+};
+
+onMounted(() => {
+  document.addEventListener('keydown', handleKeydown);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener('keydown', handleKeydown);
+});
 </script>
 
 <template>
@@ -80,13 +118,13 @@ const updateAccountMessage = (message) => {
     <div class="account-section">
       <div v-if="!props.isLoggedIn" class="login-section">
         <label for="username">{{ isRegistering ? 'New Account Username:' : 'Username:' }}</label>
-        <input type="text" id="username" v-model="username"/>
+        <input type="text" id="username" v-model="username" ref="usernameRef"/>
         <label for="password">{{ isRegistering ? 'New Account Password:' : 'Password:' }}</label>
-        <input type="password" id="password" v-model="password"/>
-        <button v-if="!isRegistering" class="button toggle" @click="login" id="login-button"
+        <input type="password" id="password" v-model="password" ref="passwordRef"/>
+        <button v-if="!isRegistering" class="button toggle" @click="login" id="login-button" ref="loginButtonRef"
                 :class="{ 'dark-icon': props.isDarkMode }">Login
         </button>
-        <button v-else class="button toggle" @click="register" id="register-button"
+        <button v-else class="button toggle" @click="register" id="register-button" ref="registerButtonRef"
                 :class="{ 'dark-icon': props.isDarkMode }">Register
         </button>
       </div>

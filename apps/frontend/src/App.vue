@@ -30,9 +30,7 @@ const toggleTheme = async () => {
   const user = auth.currentUser;
   if (user) {
     const userDoc = doc(db, 'users', user.uid);
-    await updateDoc(userDoc, {
-      'profileSettings.theme': isDarkMode.value ? 'dark' : 'light'
-    });
+    await updateDoc(userDoc, {'profileSettings.theme': isDarkMode.value ? 'dark' : 'light'});
   } else {
     localStorage.setItem('CalculatorXTheme', isDarkMode.value ? 'dark' : 'light');
   }
@@ -44,8 +42,7 @@ const loadTheme = async () => {
     const userDoc = doc(db, 'users', user.uid);
     const docSnap = await getDoc(userDoc);
     if (docSnap.exists()) {
-      const theme = docSnap.data().profileSettings.theme;
-      isDarkMode.value = theme === 'dark';
+      isDarkMode.value = docSnap.data().profileSettings.theme === 'dark';
     }
   } else {
     const CalculatorXTheme = localStorage.getItem('CalculatorXTheme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
@@ -83,9 +80,7 @@ const handleRegister = async () => {
   await loadTheme();
 };
 
-onMounted(() => {
-  loadTheme();
-});
+onMounted(loadTheme);
 </script>
 
 <template>

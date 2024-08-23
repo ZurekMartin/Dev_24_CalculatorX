@@ -12,17 +12,18 @@ const loadCalculationHistory = async () => {
   try {
     const user = auth.currentUser;
     if (user) {
-      const userDocRef = doc(db, 'users', user.uid);
-      const userDoc = await getDoc(userDocRef);
+      const userDoc = await getDoc(doc(db, 'users', user.uid));
       if (userDoc.exists()) {
-        const data = userDoc.data().historyEntries || [];
-        historyEntries.value = data.slice(-12).reverse().map(entry => entry.result || entry.value || 'Unknown result');
+        historyEntries.value = (userDoc.data().historyEntries || [])
+            .reverse()
+            .map(entry => entry.result || entry.value || 'Unknown result');
       } else {
         emit('update-info', 'No history found');
       }
     } else {
-      const localHistory = JSON.parse(localStorage.getItem('historyEntries')) || [];
-      historyEntries.value = localHistory.slice(-12).reverse().map(entry => entry.result || entry.value || 'Unknown result');
+      historyEntries.value = (JSON.parse(localStorage.getItem('historyEntries')) || [])
+          .reverse()
+          .map(entry => entry.result || entry.value || 'Unknown result');
       emit('update-info', 'User not logged in, showing local history');
     }
   } catch (error) {
@@ -35,8 +36,7 @@ const deleteHistory = async () => {
   try {
     const user = auth.currentUser;
     if (user) {
-      const userDocRef = doc(db, 'users', user.uid);
-      await updateDoc(userDocRef, {historyEntries: []});
+      await updateDoc(doc(db, 'users', user.uid), {historyEntries: []});
       await loadCalculationHistory();
       emit('update-info', 'History deleted');
     } else {
@@ -58,9 +58,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  if (intervalId) {
-    clearInterval(intervalId);
-  }
+  if (intervalId) clearInterval(intervalId);
 });
 </script>
 
