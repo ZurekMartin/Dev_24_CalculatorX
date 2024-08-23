@@ -3,6 +3,8 @@ import {ref, computed, onMounted} from 'vue';
 import History from './components/History.vue';
 import Menu from './components/Menu.vue';
 import Calculator from './components/Calculator.vue';
+import {auth, db} from './firebase';
+import {doc, getDoc, updateDoc} from 'firebase/firestore';
 
 const isHistoryVisible = ref(false);
 const isMenuVisible = ref(false);
@@ -21,10 +23,32 @@ const historyIconSrc = computed(() => isDarkMode.value ? 'src/assets/history_dar
 const menuIconSrc = computed(() => isDarkMode.value ? 'src/assets/menu_dark_mode.png' : 'src/assets/menu.png');
 const infoIconSrc = computed(() => isDarkMode.value ? 'src/assets/info_dark_mode.png' : 'src/assets/info.png');
 
-const toggleTheme = () => {
+const toggleTheme = async () => {
   isDarkMode.value = !isDarkMode.value;
   document.body.classList.toggle('dark-theme', isDarkMode.value);
-  localStorage.setItem('CalculatorXTheme', isDarkMode.value ? 'dark' : 'light');
+
+  const user = auth.currentUser;
+  if (user) {
+    const userDoc = doc(db, 'users', user.uid);
+    await updateDoc(userDoc, {'profileSettings.theme': isDarkMode.value ? 'dark' : 'light'});
+  } else {
+    localStorage.setItem('CalculatorXTheme', isDarkMode.value ? 'dark' : 'light');
+  }
+};
+
+const loadTheme = async () => {
+  const user = auth.currentUser;
+  if (user) {
+    const userDoc = doc(db, 'users', user.uid);
+    const docSnap = await getDoc(userDoc);
+    if (docSnap.exists()) {
+      isDarkMode.value = docSnap.data().profileSettings.theme === 'dark';
+    }
+  } else {
+    const CalculatorXTheme = localStorage.getItem('CalculatorXTheme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    isDarkMode.value = CalculatorXTheme === 'dark';
+  }
+  document.body.classList.toggle('dark-theme', isDarkMode.value);
 };
 
 const toggleInfo = () => {
@@ -41,17 +65,22 @@ const updateInfo = (message) => {
   setTimeout(() => isInfoLabelVisible.value = false, 4000);
 };
 
-/* Temporary */
-const toggleAccount = () => {
-  isLoggedIn.value = !isLoggedIn.value;
+const handleLogin = async () => {
+  isLoggedIn.value = true;
+  await loadTheme();
 };
-/* Temporary */
 
-onMounted(() => {
-  const CalculatorXTheme = localStorage.getItem('CalculatorXTheme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-  isDarkMode.value = CalculatorXTheme === 'dark';
-  document.body.classList.toggle('dark-theme', isDarkMode.value);
-});
+const handleLogout = () => {
+  isLoggedIn.value = false;
+  loadTheme();
+};
+
+const handleRegister = async () => {
+  isLoggedIn.value = true;
+  await loadTheme();
+};
+
+onMounted(loadTheme);
 </script>
 
 <template>
@@ -64,7 +93,8 @@ onMounted(() => {
       <img class="icon" :src="menuIconSrc" alt="Menu Icon"/>
     </button>
     <Menu :class="{ visible: isMenuVisible }" :is-dark-mode="isDarkMode" :is-logged-in="isLoggedIn"
-          @toggle-theme="toggleTheme" @cancel-menu="handleCancelMenu" @login="toggleAccount" @logout="toggleAccount"/>
+          @toggle-theme="toggleTheme" @cancel-menu="handleCancelMenu" @login="handleLogin" @logout="handleLogout"
+          @register="handleRegister" :is-menu-visible="isMenuVisible"/>
     <Calculator :is-menu-visible="isMenuVisible" @update-info="updateInfo"/>
     <button @click="toggleInfo" id="info-icon" :class="{ 'dark-icon': isDarkMode }">
       <img class="icon" :src="infoIconSrc" alt="Info Icon"/>
