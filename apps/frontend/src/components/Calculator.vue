@@ -54,6 +54,8 @@
 
 <script>
 import {ref, onMounted, onBeforeUnmount} from 'vue';
+import { getAuth } from "firebase/auth";
+import { getFirestore, collection, addDoc } from "firebase/firestore";
 
 export default {
   props: {
@@ -131,22 +133,74 @@ export default {
       }
     };
 
-    const calculate = () => {
-      if (!isErrorDisplayed.value) {
-        try {
-          displayValue.value = eval(displayValue.value).toString();
-          isResultDisplayed.value = true;
-        } catch (error) {
-          console.error("Error evaluating expression: ", error);
-          displayValue.value = "Error";
-          isErrorDisplayed.value = true;
-          isResultDisplayed.value = false;
-        }
-      } else {
-        displayValue.value = '';
-        isErrorDisplayed.value = false;
-      }
-    };
+    function updateHistory(calculation, result) {
+    const historyPanel = document.getElementById('history');
+    const entry = document.createElement('div');
+    entry.classList.add('history-entry');
+    entry.textContent = `${calculation} = ${result}`;
+
+    const firstEntry = historyPanel.querySelector('.history-entry');
+    if (firstEntry) {
+        historyPanel.insertBefore(entry, firstEntry);
+    } else {
+        historyPanel.appendChild(entry);
+    }
+
+    while (historyPanel.children.length > 25) {
+        historyPanel.removeChild(historyPanel.lastChild);
+    }
+}
+
+  // Initialize Firestore
+const db = getFirestore();
+
+const saveCalculationToFirestore = async (calculation, result) => {
+  const auth = getAuth();
+  const user = auth.currentUser;
+
+  if (user) {
+    try {
+      const calculationsRef = collection(db, 'users', user.uid, 'calculations');
+
+      // Add a new document to the 'calculations' subcollection
+      await addDoc(calculationsRef, {
+        calculation: calculation,
+        result: result,
+        timestamp: new Date(),
+      });
+
+    } catch (error) {
+      console.error("Error saving calculation:", error);
+    }
+  } else {
+    console.error("User is not authenticated.");
+  }
+};
+
+const calculate = () => {
+  if (!isErrorDisplayed.value) {
+    try {
+      const expression = displayValue.value;
+      const result = eval(expression).toString();
+      isResultDisplayed.value = true;
+      
+      updateHistory(expression, result);
+
+      // Comment out Firestore logic for now
+      // saveCalculationToFirestore(expression, result);
+
+    } catch (error) {
+      console.error("Error evaluating expression: ", error);
+      displayValue.value = "Error";
+      isErrorDisplayed.value = true;
+      isResultDisplayed.value = false;
+    }
+  } else {
+    displayValue.value = '';
+    isErrorDisplayed.value = false;
+  }
+};
+
 
     const toggleScientific = () => {
       const scientificMode = document.getElementById('scientific-mode');

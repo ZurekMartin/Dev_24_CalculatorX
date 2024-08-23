@@ -1,27 +1,85 @@
 <script setup>
-import {ref} from 'vue';
+import { ref } from 'vue';
+import { auth, db } from '../firebase';
+import { signInWithEmailAndPassword, getAuth, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
+import { getDocs, collection, query, orderBy, setDoc, doc } from 'firebase/firestore';
 
-const props = defineProps({isDarkMode: Boolean, isLoggedIn: Boolean});
+
+const props = defineProps({ isDarkMode: Boolean, isLoggedIn: Boolean });
 const emit = defineEmits(['cancel-menu', 'toggle-theme', 'login', 'logout', 'register']);
 
 const infoAccountMessage = ref('');
 const isInfoLabelAccountMessageVisible = ref(false);
 const isRegistering = ref(false);
+const username = ref('');
+const password = ref('');
+
+const loadUserCalculations = async () => {
+  const auth = getAuth();
+  const user = auth.currentUser;
+
+  if (user) {
+    try {
+      const calculationsRef = collection(db, 'users', user.uid, 'calculations');
+      const q = query(calculationsRef, orderBy('timestamp', 'desc'));
+      const querySnapshot = await getDocs(q);
+
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        updateHistory(data.calculation, data.result);
+      });
+    } catch (error) {
+      console.error("Error loading calculations:", error);
+    }
+  } else {
+    console.error("User is not authenticated.");
+  }
+};
 
 const toggleTheme = () => emit('toggle-theme');
 const cancelMenu = () => emit('cancel-menu');
-const login = () => {
-  emit('login');
-  updateAccountMessage('Successfully logged in!');
+
+const login = async () => {
+  try {
+    await signInWithEmailAndPassword(auth, username.value, password.value);
+    emit('login');
+    updateAccountMessage('Successfully logged in!');
+    loadUserCalculations();
+  } catch (error) {
+    updateAccountMessage(`Login failed: ${error.message}`);
+  }
 };
-const logout = () => {
-  emit('logout');
-  updateAccountMessage('Successfully logged out!');
+
+const logout = async () => {
+  try {
+    await signOut(auth);
+    emit('logout');
+    updateAccountMessage('Successfully logged out!');
+  } catch (error) {
+    updateAccountMessage(`Logout failed: ${error.message}`);
+  }
 };
-const register = () => {
-  emit('register');
-  updateAccountMessage('Successfully registered!');
+
+const register = async () => {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, username.value, password.value);
+    const user = userCredential.user;
+
+    // Create a document for the user in Firestore
+    await setDoc(doc(db, 'users', user.uid), {
+      uid: user.uid,
+      email: user.email,
+      createdAt: new Date(),
+    });
+
+    emit('register');
+    updateAccountMessage('Successfully registered!');
+  } catch (error) {
+    updateAccountMessage(`Registration failed: ${error.message}`);
+  }
 };
+
+
 const toggleRegistering = () => {
   isRegistering.value = !isRegistering.value;
 };
@@ -46,9 +104,9 @@ const updateAccountMessage = (message) => {
     <div class="account-section">
       <div v-if="!props.isLoggedIn" class="login-section">
         <label for="username">{{ isRegistering ? 'New Account Username:' : 'Username:' }}</label>
-        <input type="text" id="username"/>
+        <input type="text" id="username" v-model="username"/>
         <label for="password">{{ isRegistering ? 'New Account Password:' : 'Password:' }}</label>
-        <input type="password" id="password"/>
+        <input type="password" id="password" v-model="password"/>
         <button v-if="!isRegistering" class="button toggle" @click="login" id="login-button"
                 :class="{ 'dark-icon': props.isDarkMode }">Login
         </button>
