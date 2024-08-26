@@ -16,6 +16,7 @@ const loadCalculationHistory = async () => {
       if (userDoc.exists()) {
         historyEntries.value = (userDoc.data().historyEntries || [])
             .reverse()
+            .slice(0, 12)
             .map(entry => entry.result || entry.value || 'Unknown result');
       } else {
         emit('update-info', 'No history found');
@@ -23,6 +24,7 @@ const loadCalculationHistory = async () => {
     } else {
       historyEntries.value = (JSON.parse(localStorage.getItem('historyEntries')) || [])
           .reverse()
+          .slice(0, 12)
           .map(entry => entry.result || entry.value || 'Unknown result');
       emit('update-info', 'User not logged in, showing local history');
     }
@@ -70,7 +72,7 @@ onUnmounted(() => {
     </button>
     <h2>History</h2>
     <div class="history-entries">
-      <div v-for="entry in historyEntries.slice(0, 12)" :key="entry" class="history-entry">{{ entry }}</div>
+      <div v-for="(entry, index) in historyEntries.slice(0, 12)" :key="index" class="history-entry">{{ entry }}</div>
     </div>
     <div class="action-link bottom" @click="deleteHistory">Delete history</div>
   </div>
